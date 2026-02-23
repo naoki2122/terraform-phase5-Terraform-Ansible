@@ -1,0 +1,2 @@
+# ★本物の値は terraform.tfvars に入れてください（Gitに上げない）
+db_password = "CHANGE_ME_STRONG_PASSWORD"

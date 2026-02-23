@@ -1,0 +1,37 @@
+# =========================
+# Terraform
+# =========================
+
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+**/crash.log
+
+# tfvars (本物は除外、サンプルは含める)
+**/*.tfvars
+**/terraform.tfvars
+!**/*.tfvars.example
+!**/*.tfvars.sample
+
+# override files
+**/*_override.tf
+**/*_override.tf.json
+**/override.tf
+**/override.tf.json
+
+
+# =========================
+# Ansible
+# =========================
+
+**/*.retry
+
+
+# =========================
+# OS / Editor
+# =========================
+
+.DS_Store
+Thumbs.db
+**/.vscode/
+**/.idea/
