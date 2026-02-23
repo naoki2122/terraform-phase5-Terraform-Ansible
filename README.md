@@ -5,7 +5,8 @@ TerraformでAWS上にWeb基盤（ALB + ASG）を構築し、運用はSystems Man
 SSH(22)を使わず、鍵レスでオペレーションできる構成を重視しています。
 
 ## ゴール
-- Terraformでインフラをコード化（再現可能）
+- Terraformでインフラをコード化
+- Ansibleでミドルウェアインストール
 - ALB + ASGで冗長化/スケールに対応
 - EC2への管理アクセスはSSM（鍵レス）で実施
 - 22ポートは開けない設計
@@ -27,12 +28,3 @@ SSH(22)を使わず、鍵レスでオペレーションできる構成を重視�
 | ALB | 80/tcp from 0.0.0.0/0 | 公開入口 |
 | EC2 | 80/tcp from ALB SG | ALB以外からのHTTPは遮断 |
 | EC2 | 22/tcp **なし** | SSHを使わない |
-
-## 運用（SSM Run Command 例）
-Role=web のインスタンスへコマンド実行：
-
-```bash
-aws ssm send-command \
-  --document-name AWS-RunShellScript \
-  --targets "Key=tag:Role,Values=web" \
-  --parameters commands=["sudo systemctl status nginx --no-pager"]
