@@ -1,42 +1,84 @@
 # Phase5 - Terraform × ALB × ASG × SSM（SSHレス運用）
 
-## 概要
-TerraformでAWS上にWeb基盤（ALB + ASG）を構築し、運用はSystems Manager（SSM）で行うポートフォリオです。  
-SSH(22)を使わず、鍵レスでオペレーションできる構成を重視しています。
+TerraformおよびAnsibleを利用したAWSインフラ構築のポートフォリオです。  
+Infrastructure as Codeを用いたインフラ自動化の検証環境として作成しました。
 
-## ゴール
-- Terraformでインフラをコード化
-- Ansibleでミドルウェアインストール
-- ALB + ASGで冗長化/スケールに対応
-- EC2への管理アクセスはSSM（鍵レス）で実施
-- 22ポートは開けない設計
+---
 
-## 構成図
-![構成図](./phase5_architecture.png)
+# 構成概要
 
+Terraformを使用してAWS環境を構築し、  
+AnsibleおよびAWS Systems Managerを利用してサーバ構成管理を行っています。
 
-## 構成
-- VPC（Public Subnet x2）
-- Internet Gateway
-- ALB（HTTP 80）
-- Target Group
-- ASG（EC2 x2〜）
-- Launch Template
-- IAM Role/Instance Profile（AmazonSSMManagedInstanceCore）
-- SSM（Run Command / Session Manager）
-- （Ansible）SSM経由で構成反映（運用手段として位置づけ）
+SSH接続を使用せず、SSMを利用してEC2へコマンド実行を行う構成です。
 
-## セキュリティ設計
-| 対象 | inbound | 備考 |
-|---|---|---|
-| ALB | 80/tcp from 0.0.0.0/0 | 公開入口 |
-| EC2 | 80/tcp from ALB SG | ALB以外からのHTTPは遮断 |
-| EC2 | 22/tcp **なし** | SSHを使わない |
+---
 
+# 使用技術
 
+- AWS
+- Terraform
+- Ansible
+- AWS Systems Manager
+- Amazon Linux
+- Nginx
 
+---
 
+# インフラ構成
+
+構成イメージ
+
+![architecture](phase5_architecture.png)
+
+---
+
+# ディレクトリ構成
 
 
+aws-portfolio/
+├── terraform
+│ ├── modules
+│ └── envs
+│ └── dev
+├── ansible
+│ ├── inventory
+│ └── playbooks
+└── README.md
 
 
+---
+
+# Terraform 実行手順
+
+```bash
+terraform init
+terraform plan
+terraform apply
+Ansible 実行手順
+ansible-playbook ssm_web.yml -vv
+
+# 構築内容
+
+Terraformにより以下のAWSリソースを構築します。
+
+- VPC
+- Subnet
+- Security Group
+- EC2
+
+AnsibleおよびAWS Systems Managerを利用して
+以下の設定を自動化しています。
+
+- nginxインストール
+- Webページ配置
+- サービス起動
+
+# 学習目的
+
+このポートフォリオでは以下のスキル習得を目的としています。
+
+- TerraformによるInfrastructure as Code
+- Ansibleによる構成管理
+- AWS Systems Managerを利用したサーバ管理
+- SSH接続を使用しないインフラ管理
